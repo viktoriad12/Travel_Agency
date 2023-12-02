@@ -11,22 +11,12 @@ export default defineConfig({
     },
   },
   server: {
-    // proxy: {
-    //   '/api/': {
-    //     target: 'http://localhost:8080',
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/api/, ''),
-    //     headers: {
-    //       'Access-Control-Allow-Origin': '*',
-    //     },
-    //   },
-    // },
     proxy: {
-      "/public-transport/": {
+      "/travel-agency/": {
         target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/public-transport/, ""),
+        rewrite: (path) => path.replace(/^\/travel-agency/, ""),
       },
     },
     open: true,

@@ -1,7 +1,103 @@
 import { defineStore } from "pinia";
+import api from "@/services/apiService";
 
-export const useHolidayStore = defineStore("holidayStore", {
+export const useHolidayStore = defineStore({
+  id: "holidayStore",
   state: () => ({
     holidays: [],
+    locations: [],
+    loading: true,
   }),
+  actions: {
+    async fetchHolidays() {
+      try {
+        this.loading = true;
+        const response = await api.fetchHolidays();
+        this.holidays = response;
+      } catch (error) {
+        console.error("Error fetching holidays:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async createHoliday(newHoliday) {
+      try {
+        const response = await api.createHoliday(newHoliday);
+        this.fetchHolidays();
+      } catch (error) {
+        console.error("Error creating holiday:", error);
+      }
+    },
+
+    async updateHoliday(updatedHoliday) {
+      try {
+        await api.updateHoliday(updatedHoliday.id, updatedHoliday);
+        const index = this.holidays.findIndex(
+          (h) => h.id === updatedHoliday.id
+        );
+        if (index !== -1) {
+          this.holidays[index] = updatedHoliday;
+        }
+      } catch (error) {
+        console.error("Error updating holiday:", error);
+      }
+    },
+
+    async deleteHoliday(holidayId) {
+      try {
+        await api.deleteHoliday(holidayId);
+        this.holidays = this.holidays.filter((h) => h.id !== holidayId);
+      } catch (error) {
+        console.error("Error deleting holiday:", error);
+      }
+    },
+
+    async fetchLocations() {
+      try {
+        this.loading = true;
+        const response = await api.fetchLocations();
+        this.locations = response;
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async createLocation(newLocation) {
+      try {
+        const response = await api.createHoliday(newLocation);
+        console.log(response);
+        this.fetchHolidays();
+      } catch (error) {
+        console.error("Error creating holiday:", error);
+      }
+    },
+
+    async updateLocation(updatedLocation) {
+      try {
+        await api.updateHoliday(updatedLocation.id, updatedLocation);
+        const index = this.locations.findIndex(
+          (h) => h.id === updatedLocation.id
+        );
+        if (index !== -1) {
+          this.locations[index] = updatedLocation;
+        }
+      } catch (error) {
+        console.error("Error updating holiday:", error);
+      }
+    },
+
+    async deleteLocation(locationId) {
+      try {
+        await api.deleteHoliday(locationId);
+        this.locations = this.locations.filter((h) => h.id !== locationId);
+      } catch (error) {
+        console.error("Error deleting holiday:", error);
+      }
+    },
+    async fetchData() {
+      await Promise.all([this.fetchHolidays(), this.fetchLocations()]);
+    },
+  },
 });

@@ -1,23 +1,38 @@
 <template>
-  <h1>Home</h1>
-  {{ locations[0] }}
+  <div class="container mt-5">
+    <h1 class="mb-4">Home Page</h1>
+    <div v-if="holidayStore.loading" class="text-muted">Loading...</div>
+    <div v-else>
+      <!-- Holidays -->
+      <div class="mb-4">
+        <h3>Holidays</h3>
+        <div class="list-group">
+          <div v-for="holiday in holidayStore.holidays" :key="holiday.id" class="list-group-item">
+            <p class="mb-0">{{ holiday }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Locations -->
+      <div>
+        <h3>Locations</h3>
+        <div class="list-group">
+          <div v-for="location in holidayStore.locations" :key="location.id" class="list-group-item">
+            <p class="mb-0">{{ location }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import api from "@/services/apiService";
-import { onMounted, ref } from "vue";
-let locations = ref([]);
+import { useHolidayStore } from "@/store/holidayStore";
+import { onMounted } from "vue";
 
-const fetchHolidays = async () => {
-  try {
-    locations = await api.fetchHolidays();
-    console.log("total:" + locations.length), console.log(locations);
-  } catch (error) {
-    console.error("Error fetching journeys:", error);
-  }
-};
+const holidayStore = useHolidayStore();
 
 onMounted(() => {
-  fetchHolidays();
+  holidayStore.fetchData();
 });
 </script>
