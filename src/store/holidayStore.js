@@ -6,6 +6,7 @@ export const useHolidayStore = defineStore({
   state: () => ({
     holidays: [],
     locations: [],
+    reservations: [],
     loading: true,
   }),
   actions: {
@@ -14,6 +15,21 @@ export const useHolidayStore = defineStore({
         this.loading = true;
         const response = await api.fetchHolidays();
         this.holidays = response;
+      } catch (error) {
+        console.error("Error fetching holidays:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchHolidaysForReservation(locationId, startDate, duration) {
+      try {
+        this.loading = true;
+        const response = await api.fetchHolidaysForReservation(
+          locationId,
+          startDate,
+          duration
+        );
+        return response;
       } catch (error) {
         console.error("Error fetching holidays:", error);
       } finally {
@@ -86,8 +102,56 @@ export const useHolidayStore = defineStore({
         console.error("Error deleting holiday:", error);
       }
     },
+
+    async fetchReservations() {
+      try {
+        const response = await api.fetchReservations();
+        this.reservations = response;
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async fetchReservationById(id) {
+      try {
+        const response = await api.fetchReservationById(id);
+        return response;
+      } catch (error) {
+        console.error("Error fetching reservation:", error);
+      }
+    },
+
+    async createReservation(newReservation) {
+      try {
+        await api.createReservation(newReservation);
+        this.fetchReservations();
+      } catch (error) {
+        console.error("Error creating reservation:", error);
+      }
+    },
+
+    async updateReservation(updatedReservation) {
+      try {
+        await api.updateReservation(updatedReservation);
+        this.fetchReservations();
+      } catch (error) {
+        console.error("Error updating reservation:", error);
+      }
+    },
+
+    async deleteReservation(reservationId) {
+      try {
+        await api.deleteReservation(reservationId);
+        this.fetchReservations();
+      } catch (error) {
+        console.error("Error deleting reservation:", error);
+      }
+    },
+
     async fetchData() {
-      await Promise.all([this.fetchHolidays(), this.fetchLocations()]);
+      await Promise.all([this.fetchHolidays(), this.fetchLocations(), this.fetchReservations()]);
     },
   },
 });

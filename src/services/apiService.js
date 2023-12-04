@@ -17,6 +17,31 @@ const api = {
     }
   },
 
+  async fetchHolidaysForReservation(locationId, startDate, duration) {
+    try {
+      const params = {};
+
+      if (locationId) {
+        params.locationId = locationId;
+      }
+      if (startDate) {
+        params.startDate = startDate;
+      }
+      if (duration) {
+        params.duration = duration;
+      }
+
+      const response = await instance.get("/holidays", {
+        params: params,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching holidays:", error);
+      throw error;
+    }
+  },
+
   async fetchHolidayById(id) {
     try {
       const response = await instance.get(`/holidays/${id}`);
@@ -98,6 +123,54 @@ const api = {
       await instance.delete(`/locations/${id}`);
     } catch (error) {
       console.error("Error deleting location:", error);
+      throw error;
+    }
+  },
+
+  async fetchReservations() {
+    try {
+      const response = await instance.get("/reservations");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+      throw error;
+    }
+  },
+
+  async fetchReservationById(id) {
+    try {
+      const response = await instance.get(`/reservations/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching reservation:", error);
+      throw error;
+    }
+  },
+
+  async createReservation(reservation) {
+    try {
+      const response = await instance.post("/reservations", reservation);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating reservation:", error);
+      throw error;
+    }
+  },
+
+  async updateReservation(reservation) {
+    try {
+      await instance.put(`/reservations`, reservation);
+    } catch (error) {
+      console.error("Error updating reservation:", error);
+      throw error;
+    }
+  },
+
+  async deleteReservation(id) {
+    try {
+      await instance.delete(`/reservations/${id}`);
+    } catch (error) {
+      console.error("Error deleting reservation:", error);
       throw error;
     }
   },

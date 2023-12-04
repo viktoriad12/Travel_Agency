@@ -120,8 +120,7 @@
       </div>
     </div>
   </div>
-
-  <!-- create location  -->
+  <!-- create   -->
   <div class="container mt-5">
     <h1>Create Holiday</h1>
     <form @submit="createHoliday">

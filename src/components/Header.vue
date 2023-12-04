@@ -16,9 +16,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <router-link to="/" class="nav-link">Home</router-link>
-            </li>
+            </li> -->
             <li class="nav-item">
               <router-link to="/holidays" class="nav-link"
                 >Holidays</router-link
@@ -28,6 +28,12 @@
               <router-link to="/locations" class="nav-link"
                 >Locations</router-link
               >
+            </li>
+              <li class="nav-item">
+              <router-link to="/reservations" class="nav-link"
+                >Reservations</router-link
+              >
+
             </li>
           </ul>
         </div>

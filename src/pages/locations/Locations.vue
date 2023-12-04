@@ -27,7 +27,7 @@
             </button>
           </div>
         </div>
-        <!-- Edit location form -->
+        <!-- Edit  -->
         <div v-if="showEdit && editedLocation === location.id">
           <form @submit.prevent="updateLocation(location)" class="m-3">
             <div class="row g-3">
@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-    <!-- create location form -->
+    <!-- create -->
     <h1>Create Location</h1>
     <form @submit="createLocation" class="mt-4">
       <div class="row g-3">
@@ -171,8 +171,6 @@ const updateLocation = async (location) => {
       country: editFormData.value.country,
     };
 
-    console.log("updateDTO:", updateDTO);
-
     await apiService.updateLocation(updateDTO);
     holidayStore.fetchData();
     showEdit.value = false;
@@ -198,7 +196,6 @@ const deleteLocation = async (id) => {
     console.error("Error deleting location:", error);
   }
 };
-
 
 onMounted(() => {
   holidayStore.fetchData();

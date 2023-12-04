@@ -2,7 +2,7 @@ export const routes = [
     {
         path: "/",
         name: "Home",
-        component: () => import("@/pages/HomePage.vue"),
+        component: () => import("@/pages/Home.vue"),
     },
     {
         path: "/locations",
@@ -14,6 +14,11 @@ export const routes = [
         name: "Holidays",
         component: () => import("@/pages/holidays/Holidays.vue"),
     },
+    {
+        path:"/reservations",
+        name:"Reservations",
+        component: () => import("@/pages/reservations/Reservations.vue"),
+    }
     // {
     //     path: "/:catchAll(.*)",
     //     name: "NotFound",
