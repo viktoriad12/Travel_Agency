@@ -7,17 +7,25 @@
       <div class="mb-4">
         <h3>Holidays</h3>
         <div class="list-group">
-          <div v-for="holiday in holidayStore.holidays" :key="holiday.id" class="list-group-item">
+          <div
+            v-for="holiday in holidayStore.holidays"
+            :key="holiday.id"
+            class="list-group-item"
+          >
             <p class="mb-0">{{ holiday }}</p>
           </div>
         </div>
       </div>
-      
+
       <!-- Locations -->
       <div>
         <h3>Locations</h3>
         <div class="list-group">
-          <div v-for="location in holidayStore.locations" :key="location.id" class="list-group-item">
+          <div
+            v-for="location in holidayStore.locations"
+            :key="location.id"
+            class="list-group-item"
+          >
             <p class="mb-0">{{ location }}</p>
           </div>
         </div>

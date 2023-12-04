@@ -31,13 +31,8 @@ export const useHolidayStore = defineStore({
 
     async updateHoliday(updatedHoliday) {
       try {
-        await api.updateHoliday(updatedHoliday.id, updatedHoliday);
-        const index = this.holidays.findIndex(
-          (h) => h.id === updatedHoliday.id
-        );
-        if (index !== -1) {
-          this.holidays[index] = updatedHoliday;
-        }
+        await api.updateHoliday(updatedHoliday);
+        this.fetchHolidays();
       } catch (error) {
         console.error("Error updating holiday:", error);
       }
@@ -76,13 +71,8 @@ export const useHolidayStore = defineStore({
 
     async updateLocation(updatedLocation) {
       try {
-        await api.updateHoliday(updatedLocation.id, updatedLocation);
-        const index = this.locations.findIndex(
-          (h) => h.id === updatedLocation.id
-        );
-        if (index !== -1) {
-          this.locations[index] = updatedLocation;
-        }
+        await api.updateLocations(updatedLocation);
+        this.fetchLocations();
       } catch (error) {
         console.error("Error updating holiday:", error);
       }

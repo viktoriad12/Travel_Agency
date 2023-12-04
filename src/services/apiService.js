@@ -37,10 +37,9 @@ const api = {
     }
   },
 
-  async updateHoliday(id, holiday) {
+  async updateHoliday(holiday) {
     try {
-      const response = await instance.put(`/holidays/${id}`, holiday);
-      return response.data;
+      await instance.put(`/holidays`, holiday);
     } catch (error) {
       console.error("Error updating journey:", error);
       throw error;
@@ -49,14 +48,11 @@ const api = {
 
   async deleteHoliday(id) {
     try {
-      const response = await instance.delete(`/holidays/${id}`);
-      return response.data;
+      await instance.delete(`/holidays/${id}`);
     } catch (error) {
       console.error("Error deleting journey:", error);
       throw error;
     }
-
-
   },
 
   async fetchLocations() {
@@ -71,8 +67,7 @@ const api = {
 
   async fetchLocationById(id) {
     try {
-      const response = await instance.get(`/locations/${id}`);
-      return response.data;
+      await instance.get(`/locations/${id}`);
     } catch (error) {
       console.error("Error fetching location:", error);
       throw error;
@@ -81,18 +76,17 @@ const api = {
 
   async createLocation(locationData) {
     try {
-      const response = await instance.post('/locations', locationData);
-      return response.data;
+      await instance.post("/locations", locationData);
     } catch (error) {
-      console.error('Error creating location:', error);
+      console.error("Error creating location:", error);
       throw error;
     }
   },
 
-  async updateLocation(id, location) {
+  async updateLocation(updateDTO) {
     try {
-      const response = await instance.put(`/locations/${id}`, location);
-      return response.data;
+      console.log(updateDTO);
+      await instance.put(`/locations`, updateDTO);
     } catch (error) {
       console.error("Error updating location:", error);
       throw error;
@@ -101,15 +95,12 @@ const api = {
 
   async deleteLocation(id) {
     try {
-      const response = await instance.delete(`/locations/${id}`);
-      return response.data;
+      await instance.delete(`/locations/${id}`);
     } catch (error) {
       console.error("Error deleting location:", error);
       throw error;
     }
   },
-
-
 };
 
 export default api;
