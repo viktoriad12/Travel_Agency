@@ -30,19 +30,19 @@
             >
               Delete
             </button>
-            <button @click="editHoliday(holiday)" class="btn btn-primary">
+            <button @click="showEditForm(holiday)" class="btn btn-primary">
               Edit
             </button>
           </div>
         </div>
         <!-- edit -->
-        <div v-if="showEdit && editedHoliday">
-          <form @submit.prevent="updateHoliday(editedHoliday)" class="m-3">
+        <div v-if="showEdit && editedHoliday === holiday.id">
+          <form @submit.prevent="updateHoliday(holiday)" class="m-3">
             <div class="row g-3">
               <div class="col-md-4">
                 <label for="title" class="form-label">Title</label>
                 <input
-                  v-model="formData.title"
+                  v-model="editFormData.title"
                   type="text"
                   class="form-control"
                   id="title"
@@ -52,7 +52,7 @@
               <div class="col-md-2">
                 <label for="startDate" class="form-label">Start Date</label>
                 <input
-                  v-model="formData.startDate"
+                  v-model="editFormData.startDate"
                   type="date"
                   class="form-control"
                   id="startDate"
@@ -62,7 +62,7 @@
               <div class="col-md-3">
                 <label for="duration" class="form-label">Duration (days)</label>
                 <input
-                  v-model="formData.duration"
+                  v-model="editFormData.duration"
                   type="number"
                   class="form-control"
                   id="duration"
@@ -72,7 +72,7 @@
               <div class="col-md-3">
                 <label for="price" class="form-label">Price</label>
                 <input
-                  v-model="formData.price"
+                  v-model="editFormData.price"
                   type="number"
                   class="form-control"
                   id="price"
@@ -83,7 +83,7 @@
               <div class="col-md-3">
                 <label for="freeSlots" class="form-label">Free Slots</label>
                 <input
-                  v-model="formData.freeSlots"
+                  v-model="editFormData.freeSlots"
                   type="number"
                   class="form-control"
                   id="freeSlots"
@@ -94,7 +94,7 @@
               <div class="col-md-3">
                 <label for="location" class="form-label">Location</label>
                 <select
-                  v-model="formData.location"
+                  v-model="editFormData.location"
                   class="form-select"
                   id="location"
                 >
@@ -120,7 +120,8 @@
       </div>
     </div>
   </div>
-  <!-- create   -->
+
+  <!-- create location  -->
   <div class="container mt-5">
     <h1>Create Holiday</h1>
     <form @submit="createHoliday">
@@ -208,12 +209,21 @@ const formData = ref({
   location: "",
 });
 
+const editFormData = ref({
+  title: "",
+  startDate: "",
+  duration: "",
+  price: "",
+  freeSlots: "",
+  location: "",
+});
+
 const showEdit = ref(false);
 const editedHoliday = ref(null);
 
-const editHoliday = (holiday) => {
-  formData.value = { ...holiday };
-  editedHoliday.value = holiday;
+const showEditForm = (holiday) => {
+  editFormData.value = { ...holiday };
+  editedHoliday.value = holiday.id;
   showEdit.value = true;
 
   const locationIndex = holidayStore.locations.findIndex(
@@ -221,7 +231,7 @@ const editHoliday = (holiday) => {
   );
 
   if (locationIndex !== -1) {
-    formData.value.location = holidayStore.locations[locationIndex].id;
+    editFormData.value.location = holidayStore.locations[locationIndex].id;
   }
 };
 
@@ -229,12 +239,12 @@ const updateHoliday = async (holiday) => {
   try {
     const updateData = {
       id: holiday.id,
-      title: formData.value.title,
-      startDate: formData.value.startDate,
-      duration: formData.value.duration,
-      price: formData.value.price,
-      freeSlots: formData.value.freeSlots,
-      location: formData.value.location,
+      title: editFormData.value.title,
+      startDate: editFormData.value.startDate,
+      duration: editFormData.value.duration,
+      price: editFormData.value.price,
+      freeSlots: editFormData.value.freeSlots,
+      location: editFormData.value.location,
     };
 
     await apiService.updateHoliday(updateData);

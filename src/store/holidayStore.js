@@ -123,6 +123,10 @@ export const useHolidayStore = defineStore({
       }
     },
 
+    findReservationByPhoneNumber(phoneNumber) {
+      return this.reservations.find((r) => r.phoneNumber === phoneNumber);
+    },
+
     async createReservation(newReservation) {
       try {
         await api.createReservation(newReservation);

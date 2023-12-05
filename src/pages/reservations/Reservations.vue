@@ -84,68 +84,77 @@
       </div>
     </div>
   </div>
-  <div class="mt-4">
-    <h3>All Reservations</h3>
-    <ul class="list-group">
-      <li
-        v-for="reservation in holidayStore.reservations"
-        :key="reservation.id"
-        class="list-group-item"
+  <!-- search, edit, delete -->
+  <div class="container mt-5">
+    <h1>Find Reservation</h1>
+    <div class="mb-3">
+      <label for="searchPhoneNumber" class="form-label"
+        >Search by Phone Number:</label
       >
-        {{ reservation.contactName }} - {{ reservation.phoneNumber }}
+      <input
+        type="text"
+        class="form-control"
+        id="searchPhoneNumber"
+        v-model="searchPhoneNumber"
+      />
+    </div>
+    <button class="btn btn-primary" @click="findReservation">Search</button>
 
-        <p>{{ reservation.holiday.title }}</p>
-        <p>{{ reservation.holiday.startDate }}</p>
-        <p>
-          {{ reservation.holiday.location.city }},
-          {{ reservation.holiday.location.country }}
-        </p>
-        <div class="btn-group mt-2">
-          <button class="btn btn-primary" @click="editReservation(reservation)">
-            Edit
-          </button>
-          <button
-            class="btn btn-danger"
-            @click="deleteReservation(reservation.id)"
-          >
-            Delete
-          </button>
-        </div>
+    <div v-if="foundReservation" class="mt-4">
+      <h3>Found Reservation</h3>
+      <ul class="list-group">
+        <li class="list-group-item">
+          {{ foundReservation.contactName }} -
+          {{ foundReservation.phoneNumber }}
 
-        <!-- Edit  -->
-        <div v-if="editForm.id === reservation.id" class="mt-3">
-          <h6>Edit Reservation</h6>
-          <div class="mb-3">
-            <label for="editContactName" class="form-label"
-              >Contact Name:</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="editContactName"
-              v-model="editForm.contactName"
-            />
+          <p>{{ foundReservation.holiday.title }}</p>
+          <p>{{ foundReservation.holiday.startDate }}</p>
+          <p>
+            {{ foundReservation.holiday.location.city }},
+            {{ foundReservation.holiday.location.country }}
+          </p>
+
+          <div class="mt-2">
+            <button class="btn btn-primary" @click="editFoundReservation">
+              Edit
+            </button>
+            <button class="btn btn-danger" @click="deleteFoundReservation">
+              Delete
+            </button>
           </div>
-          <div class="mb-3">
-            <label for="editPhoneNumber" class="form-label"
-              >Phone Number:</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="editPhoneNumber"
-              v-model="editForm.phoneNumber"
-            />
+
+          <!-- Edit form for the found reservation -->
+          <div v-if="showEditForm" class="mt-3">
+            <h6>Edit Reservation</h6>
+            <div class="mb-3">
+              <label for="editContactName" class="form-label"
+                >Contact Name:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="editContactName"
+                v-model="editForm.contactName"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="editPhoneNumber" class="form-label"
+                >Phone Number:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="editPhoneNumber"
+                v-model="editForm.phoneNumber"
+              />
+            </div>
+            <button class="btn btn-success" @click="updateFoundReservation">
+              Update Reservation
+            </button>
           </div>
-          <button
-            class="btn btn-success"
-            @click="updateReservation(reservation)"
-          >
-            Update Reservation
-          </button>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -184,8 +193,6 @@ const createReservation = async (holidayId) => {
 
     await holidayStore.createReservation(reservationData);
 
-    console.log("Reservation created:", reservationData);
-
     reservationForm.value = {
       holidayId: null,
       contactName: "",
@@ -196,44 +203,59 @@ const createReservation = async (holidayId) => {
   }
 };
 
+// edit logic
+
+const searchPhoneNumber = ref("");
+const foundReservation = ref(null);
+const showEditForm = ref(false);
+
 const editForm = ref({
   id: null,
   contactName: "",
   phoneNumber: "",
 });
 
-const editReservation = (reservation) => {
-  editForm.value = {
-    id: reservation.id,
-    contactName: reservation.contactName,
-    phoneNumber: reservation.phoneNumber,
-  };
+const findReservation = () => {
+  const reservation = holidayStore.findReservationByPhoneNumber(
+    searchPhoneNumber.value
+  );
+
+  foundReservation.value = reservation ? reservation : null;
 };
 
-const updateReservation = async (reservation) => {
+const editFoundReservation = () => {
+  editForm.value.contactName = foundReservation.value.contactName;
+  editForm.value.phoneNumber = foundReservation.value.phoneNumber;
+  showEditForm.value = true;
+};
+
+const updateFoundReservation = async () => {
   try {
     const updatedReservation = {
-      id: reservation.id,
+      id: foundReservation.value.id,
       contactName: editForm.value.contactName,
       phoneNumber: editForm.value.phoneNumber,
-      holiday: reservation.holiday.id,
+      holiday: foundReservation.value.holiday.id,
     };
 
     await holidayStore.updateReservation(updatedReservation);
+    showEditForm.value = false;
 
-    editForm.value = {
-      id: null,
-      contactName: "",
-      phoneNumber: "",
-    };
+    const updated = await holidayStore.fetchReservationById(
+      foundReservation.value.id
+    );
+    if (updated) {
+      foundReservation.value = updated;
+    }
   } catch (error) {
     console.error("Error updating reservation:", error);
   }
 };
 
-const deleteReservation = async (reservationId) => {
+const deleteFoundReservation = async () => {
   try {
-    await holidayStore.deleteReservation(reservationId);
+    await holidayStore.deleteReservation(foundReservation.value.id);
+    foundReservation.value = null;
   } catch (error) {
     console.error("Error deleting reservation:", error);
   }
