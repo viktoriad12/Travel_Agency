@@ -92,7 +92,8 @@ const api = {
 
   async fetchLocationById(id) {
     try {
-      await instance.get(`/locations/${id}`);
+     const response = await instance.get(`/locations/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error fetching location:", error);
       throw error;

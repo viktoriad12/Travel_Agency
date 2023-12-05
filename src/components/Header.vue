@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <router-link to="/" class="navbar-brand">Travel Agency</router-link>
         <button
@@ -15,25 +15,15 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <!-- <li class="nav-item">
-              <router-link to="/" class="nav-link">Home</router-link>
-            </li> -->
+          <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <router-link to="/holidays" class="nav-link"
-                >Holidays</router-link
-              >
+              <router-link to="/holidays" class="nav-link">Holidays</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/locations" class="nav-link"
-                >Locations</router-link
-              >
+              <router-link to="/locations" class="nav-link">Locations</router-link>
             </li>
-              <li class="nav-item">
-              <router-link to="/reservations" class="nav-link"
-                >Reservations</router-link
-              >
-
+            <li class="nav-item">
+              <router-link to="/reservations" class="nav-link">Reservations</router-link>
             </li>
           </ul>
         </div>
@@ -45,3 +35,11 @@
 <script>
 import { RouterLink } from "vue-router";
 </script>
+
+<style scoped>
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: #fff;
+}
+
+</style>

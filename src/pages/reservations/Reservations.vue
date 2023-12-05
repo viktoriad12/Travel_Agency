@@ -148,8 +148,17 @@
                 v-model="editForm.phoneNumber"
               />
             </div>
-            <button class="btn btn-success" @click="updateFoundReservation">
+            <button
+              class="btn btn-success mt-4"
+              @click="updateFoundReservation"
+            >
               Update Reservation
+            </button>
+            <button
+              @click="cancelEdit"
+              class="btn btn-secondary mt-4 btn-cancel"
+            >
+              Cancel
             </button>
           </div>
         </li>
@@ -229,6 +238,10 @@ const editFoundReservation = () => {
   showEditForm.value = true;
 };
 
+const cancelEdit = () => {
+  showEditForm.value = false;
+};
+
 const updateFoundReservation = async () => {
   try {
     const updatedReservation = {
@@ -277,3 +290,22 @@ onMounted(() => {
   holidayStore.fetchData();
 });
 </script>
+
+<style scoped>
+.card {
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  padding-bottom: 15px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.btn-cancel {
+  margin-left: 10px;
+}
+</style>

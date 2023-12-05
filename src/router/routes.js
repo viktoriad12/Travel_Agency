@@ -10,6 +10,11 @@ export const routes = [
         component: () => import("@/pages/locations/Locations.vue"),
     },
     {
+        path: '/location-details',
+        name: 'LocationDetails',
+        component: () => import("@/pages/locations/LocationDetails.vue"),
+      },
+    {
         path: "/holidays",
         name: "Holidays",
         component: () => import("@/pages/holidays/Holidays.vue"),

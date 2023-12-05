@@ -75,6 +75,15 @@ export const useHolidayStore = defineStore({
       }
     },
 
+    async fetchLocationById(id) {
+      try {
+        const response = await api.fetchLocationById(id);
+        return response;
+      } catch (error) {
+        console.error("Error fetching location:", error);
+      }
+    },
+
     async createLocation(newLocation) {
       try {
         const response = await api.createHoliday(newLocation);
@@ -155,7 +164,11 @@ export const useHolidayStore = defineStore({
     },
 
     async fetchData() {
-      await Promise.all([this.fetchHolidays(), this.fetchLocations(), this.fetchReservations()]);
+      await Promise.all([
+        this.fetchHolidays(),
+        this.fetchLocations(),
+        this.fetchReservations(),
+      ]);
     },
   },
 });
