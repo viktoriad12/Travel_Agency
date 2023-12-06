@@ -2,7 +2,7 @@ export const routes = [
   {
     path: "/",
     name: "Home",
-    component: () => import("@/pages/Home.vue"),
+    component: () => import("@/pages/holidays/Holidays.vue"),
   },
   {
     path: "/locations",
@@ -34,9 +34,4 @@ export const routes = [
     name: "FindReservation",
     component: () => import("@/pages/reservations/FindReservation.vue"),
   },
-  // {
-  //     path: "/:catchAll(.*)",
-  //     name: "NotFound",
-  //     component: () => import("@/pages/NotFound.vue"),
-  // }
 ];
