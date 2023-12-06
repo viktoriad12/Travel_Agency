@@ -1,8 +1,11 @@
 <template>
   <div class="container mt-5">
-    <h1>Holiday Details</h1>
+    <router-link :to="{ name: 'Holidays' }" class="link-primary">
+      &larr; Go Back
+    </router-link>
+    <h1 class="mt-4">Holiday Details</h1>
     <div v-if="holiday">
-      <div class="card">
+      <div class="card" style="width: 40%">
         <div class="card-body">
           <h5 class="card-title">{{ holiday.title }}</h5>
           <p class="card-text">
@@ -18,7 +21,7 @@
         </div>
       </div>
     </div>
-<div v-if="!holiday">
+    <div v-if="!holiday">
       <p>Loading location details...</p>
     </div>
   </div>

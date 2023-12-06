@@ -1,23 +1,26 @@
 <template>
-    <div class="container mt-5">
-      <h1>Location Details</h1>
-      <div v-if="locationDetails">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Street: {{ locationDetails.street }}</h5>
-            <p class="card-text">
-              <strong>Number:</strong> {{ locationDetails.number }}<br>
-              <strong>City:</strong> {{ locationDetails.city }}<br>
-              <strong>Country:</strong> {{ locationDetails.country }}
-            </p>
-          </div>
+  <div class="container mt-5">
+    <router-link :to="{ name: 'Locations' }" class="link-primary">
+      &larr; Go Back
+    </router-link>
+    <h1 class="mt-4">Location Details</h1>
+    <div v-if="locationDetails">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Street: {{ locationDetails.street }}</h5>
+          <p class="card-text">
+            <strong>Number:</strong> {{ locationDetails.number }}<br />
+            <strong>City:</strong> {{ locationDetails.city }}<br />
+            <strong>Country:</strong> {{ locationDetails.country }}
+          </p>
         </div>
       </div>
-      <div v-else>
-        <p>Loading location details...</p>
-      </div>
     </div>
-  </template>
+    <div v-if="!locationDetails">
+      <p>Loading location details...</p>
+    </div>
+  </div>
+</template>
 
 <script setup>
 import { useHolidayStore } from "@/store/holidayStore";
