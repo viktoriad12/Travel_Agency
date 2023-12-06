@@ -174,22 +174,3 @@ onMounted(() => {
   holidayStore.fetchData();
 });
 </script>
-
-<style scoped>
-.card {
-  border-radius: 15px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  padding-bottom: 15px;
-}
-
-.form-label {
-  font-weight: bold;
-}
-
-.btn-cancel {
-  margin-left: 10px;
-}
-</style>

@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-8">
-        <div class="card pe-4 mb-5" style="height: 700px; overflow-y: scroll">
+        <div class="card pe-4 mb-5">
           <div class="card-body">
             <h1>Holidays</h1>
             <div v-if="holidayStore.loading" class="mb-3">Loading...</div>
@@ -40,7 +40,6 @@
                         {{ holiday.location.country }}
                       </p>
                     </div>
-                    <!-- buttons -->
                     <div
                       class="col-md-4 d-flex flex-column justify-content-end align-items-end mr-3"
                     >
@@ -71,100 +70,10 @@
                   </div>
                 </div>
                 <!-- edit -->
-                <div v-if="showEdit && editedHoliday === holiday.id">
-                  <form @submit.prevent="updateHoliday(holiday)" class="m-3">
-                    <div class="row g-3">
-                      <div class="col-md-4">
-                        <label for="title" class="form-label">Title</label>
-                        <input
-                          v-model="editFormData.title"
-                          type="text"
-                          class="form-control"
-                          id="title"
-                          placeholder="Title"
-                        />
-                      </div>
-                      <div class="col-md-2">
-                        <label for="startDate" class="form-label"
-                          >Start Date</label
-                        >
-                        <input
-                          v-model="editFormData.startDate"
-                          type="date"
-                          class="form-control"
-                          id="startDate"
-                        />
-                      </div>
-
-                      <div class="col-md-3">
-                        <label for="duration" class="form-label"
-                          >Duration (days)</label
-                        >
-                        <input
-                          v-model="editFormData.duration"
-                          type="number"
-                          class="form-control"
-                          id="duration"
-                          placeholder="Duration"
-                        />
-                      </div>
-                      <div class="col-md-3">
-                        <label for="price" class="form-label">Price</label>
-                        <input
-                          v-model="editFormData.price"
-                          type="number"
-                          class="form-control"
-                          id="price"
-                          placeholder="Price"
-                        />
-                      </div>
-
-                      <div class="col-md-3">
-                        <label for="freeSlots" class="form-label"
-                          >Free Slots</label
-                        >
-                        <input
-                          v-model="editFormData.freeSlots"
-                          type="number"
-                          class="form-control"
-                          id="freeSlots"
-                          placeholder="Free Slots"
-                        />
-                      </div>
-
-                      <div class="col-md-3">
-                        <label for="location" class="form-label"
-                          >Location</label
-                        >
-                        <select
-                          v-model="editFormData.location"
-                          class="form-select"
-                          id="location"
-                        >
-                          <option value="" disabled>Select a location</option>
-                          <option
-                            v-for="location in holidayStore.locations"
-                            :key="location.id"
-                            :value="location.id"
-                          >
-                            {{ location.street }} {{ location.number }},
-                            {{ location.city }},
-                            {{ location.country }}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <button type="submit" class="btn btn-success mt-4">
-                      Update Holiday
-                    </button>
-                    <button
-                      @click="cancelEdit"
-                      class="btn btn-secondary mt-4 btn-cancel"
-                    >
-                      Cancel
-                    </button>
-                  </form>
-                </div>
+                <EditHolidayForm
+                  v-if="holidayStore.showEdit && editedHoliday === holiday.id"
+                  :holiday="holiday"
+                />
               </div>
             </div>
           </div>
@@ -228,7 +137,7 @@
                 <label for="price" class="form-label">Price</label>
                 <input
                   v-model="formData.price"
-                  type="number"
+                  type="text"
                   class="form-control"
                   id="price"
                   placeholder="Price"
@@ -258,6 +167,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useHolidayStore } from "@/store/holidayStore";
+import EditHolidayForm from "./EditHolidayForm.vue";
 
 const holidayStore = useHolidayStore();
 
@@ -270,59 +180,16 @@ const formData = ref({
   location: "",
 });
 
-const editFormData = ref({
-  title: "",
-  startDate: "",
-  duration: "",
-  price: "",
-  freeSlots: "",
-  location: "",
-});
-
-const showEdit = ref(false);
 const editedHoliday = ref(null);
 
 const showEditForm = (holiday) => {
-  editFormData.value = { ...holiday };
   editedHoliday.value = holiday.id;
-  showEdit.value = true;
-
-  const locationIndex = holidayStore.locations.findIndex(
-    (location) => location.id === holiday.location.id
-  );
-
-  if (locationIndex !== -1) {
-    editFormData.value.location = holidayStore.locations[locationIndex].id;
-  }
-};
-
-const cancelEdit = () => {
-  showEdit.value = false;
-  editedHoliday.value = null;
-};
-
-const updateHoliday = async (holiday) => {
-  try {
-    const updateData = {
-      id: holiday.id,
-      title: editFormData.value.title,
-      startDate: editFormData.value.startDate,
-      duration: editFormData.value.duration,
-      price: editFormData.value.price,
-      freeSlots: editFormData.value.freeSlots,
-      location: editFormData.value.location,
-    };
-
-    await holidayStore.updateHoliday(updateData);
-    showEdit.value = false;
-    editedHoliday.value = null;
-  } catch (error) {
-    console.error("Error updating holiday:", error);
-  }
+  holidayStore.showEdit = true;
 };
 
 const createHoliday = async () => {
   try {
+    formData.value.price = Number(formData.value.price);
     await holidayStore.createHoliday(formData.value);
   } catch (error) {
     console.error("Error creating holiday:", error);
@@ -331,7 +198,12 @@ const createHoliday = async () => {
 
 const deleteHoliday = async (id) => {
   try {
-    await holidayStore.deleteHoliday(id);
+    const confirmed = window.confirm("Are you sure you want to delete this holiday?");
+    if (confirmed) {
+      await holidayStore.deleteHoliday(id);
+    } else {
+      console.log("Deletion canceled");
+    }
   } catch (error) {
     console.error("Error deleting holiday:", error);
   }
@@ -341,18 +213,3 @@ onMounted(() => {
   holidayStore.fetchData();
 });
 </script>
-
-<style scoped>
-.card {
-  border-radius: 15px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  padding-bottom: 15px;
-}
-
-.btn-cancel {
-  margin-left: 10px;
-}
-</style>

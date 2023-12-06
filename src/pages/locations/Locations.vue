@@ -3,7 +3,7 @@
     <div class="row">
       <!-- List of Locations -->
       <div class="col-md-8">
-        <div class="card pe-4" style="height: 550px; overflow-y: scroll">
+        <div class="card pe-4" >
           <div class="card-body">
             <h1>Locations</h1>
             <div v-if="holidayStore.loading" class="mb-3">Loading...</div>
@@ -45,67 +45,10 @@
                   </div>
                 </div>
                 <!-- Edit Form -->
-                <div v-if="showEdit && editedLocation === location.id">
-                  <form @submit.prevent="updateLocation(location)" class="m-3">
-                    <div class="row g-3">
-                      <div class="col-md-4">
-                        <label for="editStreet" class="form-label"
-                          >Street</label
-                        >
-                        <input
-                          v-model="editFormData.street"
-                          type="text"
-                          class="form-control"
-                          id="editStreet"
-                          placeholder="Street"
-                        />
-                      </div>
-                      <div class="col-md-2">
-                        <label for="editNumber" class="form-label"
-                          >Number</label
-                        >
-                        <input
-                          v-model="editFormData.number"
-                          type="text"
-                          class="form-control"
-                          id="editNumber"
-                          placeholder="Number"
-                        />
-                      </div>
-                      <div class="col-md-3">
-                        <label for="editCity" class="form-label">City</label>
-                        <input
-                          v-model="editFormData.city"
-                          type="text"
-                          class="form-control"
-                          id="editCity"
-                          placeholder="City"
-                        />
-                      </div>
-                      <div class="col-md-3">
-                        <label for="editCountry" class="form-label"
-                          >Country</label
-                        >
-                        <input
-                          v-model="editFormData.country"
-                          type="text"
-                          class="form-control"
-                          id="editCountry"
-                          placeholder="Country"
-                        />
-                      </div>
-                    </div>
-                    <button type="submit" class="btn btn-success mt-4">
-                      Update Location
-                    </button>
-                    <button
-                      @click="cancelEdit"
-                      class="btn btn-secondary mt-4 btn-cancel"
-                    >
-                      Cancel
-                    </button>
-                  </form>
-                </div>
+                <EditLocationForm
+                  v-if="holidayStore.showEdit && editedLocation === location.id"
+                  :location="location"
+                />
               </div>
             </div>
           </div>
@@ -175,6 +118,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useHolidayStore } from "@/store/holidayStore";
+import EditLocationForm from "./EditLocationForm.vue";
 
 const holidayStore = useHolidayStore();
 
@@ -185,45 +129,13 @@ const formData = ref({
   country: "",
 });
 
-const editFormData = ref({
-  street: "",
-  number: "",
-  city: "",
-  country: "",
-});
-
-const showEdit = ref(false);
 const editedLocation = ref(null);
 
 const showEditForm = (location) => {
-  editFormData.value = { ...location };
   editedLocation.value = location.id;
-  showEdit.value = true;
+  holidayStore.showEdit = true;
 };
 
-const cancelEdit = () => {
-  showEdit.value = false;
-  editedLocation.value = null;
-};
-
-const updateLocation = async (location) => {
-  try {
-    const updateDTO = {
-      id: location.id,
-      street: editFormData.value.street,
-      number: editFormData.value.number,
-      city: editFormData.value.city,
-      country: editFormData.value.country,
-    };
-
-    await holidayStore.updateLocation(updateDTO);
-    holidayStore.fetchData();
-    showEdit.value = false;
-    editedLocation.value = null;
-  } catch (error) {
-    console.error("Error updating location:", error);
-  }
-};
 const createLocation = async () => {
   try {
     await holidayStore.createLocation(formData.value);
@@ -246,18 +158,3 @@ onMounted(() => {
   holidayStore.fetchData();
 });
 </script>
-
-<style scoped>
-.card {
-  border-radius: 15px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  padding-bottom: 15px;
-}
-
-.btn-cancel {
-  margin-left: 10px;
-}
-</style>

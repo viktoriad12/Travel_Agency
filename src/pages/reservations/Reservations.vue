@@ -2,17 +2,23 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-4">
-        <div class="card pe-4" style="height: 500px; overflow-y: scroll">
+        <div class="card pe-4" style="height: 500px">
           <div class="card-body">
             <h2 class="mb-4 mt-3">Find A Holiday</h2>
             <div class="mb-4">
-              <label for="locationId">Location ID:</label>
-              <input
-                type="text"
-                class="form-control"
-                id="locationId"
-                v-model="locationId"
-              />
+              <label for="location">Location</label>
+              <select v-model="locationId" class="form-select" id="location">
+                <option value="" disabled>Select a location</option>
+                <option
+                  v-for="location in holidayStore.locations"
+                  :key="location.id"
+                  :value="location.id"
+                >
+                  {{ location.street }} {{ location.number }},
+                  {{ location.city }},
+                  {{ location.country }}
+                </option>
+              </select>
             </div>
             <div class="mb-4">
               <label for="startDate">Start Date:</label>
@@ -39,7 +45,7 @@
         </div>
       </div>
       <div class="col-md-8">
-        <div class="card pe-4" style="height: 500px; overflow-y: scroll">
+        <div class="card pe-4">
           <div class="card-body">
             <div
               v-for="holiday in holidays"
@@ -49,7 +55,15 @@
               <div class="card-body">
                 <h5 class="card-title">{{ holiday.title }}</h5>
                 <p class="card-text">
-                  {{ holiday.startDate }} - Duration: {{ holiday.duration }}
+                  {{ holiday.startDate }} - <strong>Duration:</strong>
+                  {{ holiday.duration }} days
+                </p>
+                <p class="card-text">
+                  <strong>Price:</strong> ${{ holiday.price }}
+                </p>
+                <p class="card-text">
+                  <strong>Location:</strong> {{ holiday.location.city }},
+                  {{ holiday.location.country }}
                 </p>
                 <div class="mb-3">
                   <button
@@ -159,12 +173,12 @@ const cancelReservation = () => {
 
 const fetchHolidaysData = async () => {
   try {
+    await holidayStore.fetchData();
     if (
       locationId.value === null &&
       startDate.value === null &&
       duration.value === null
     ) {
-      await holidayStore.fetchData();
       holidays.value = holidayStore.holidays;
     } else {
       holidays.value = await holidayStore.fetchHolidaysForReservation(
@@ -179,26 +193,6 @@ const fetchHolidaysData = async () => {
 };
 
 onMounted(() => {
-  holidayStore.fetchData();
   fetchHolidaysData();
 });
 </script>
-
-<style scoped>
-.card {
-  border-radius: 15px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  padding-bottom: 15px;
-}
-
-.form-label {
-  font-weight: bold;
-}
-
-.btn-cancel {
-  margin-left: 10px;
-}
-</style>

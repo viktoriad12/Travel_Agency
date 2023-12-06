@@ -8,6 +8,7 @@ export const useHolidayStore = defineStore({
     locations: [],
     reservations: [],
     loading: true,
+    showEdit:false,
   }),
   actions: {
     // holidays
