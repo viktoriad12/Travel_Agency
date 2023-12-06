@@ -10,6 +10,7 @@ export const useHolidayStore = defineStore({
     loading: true,
   }),
   actions: {
+    // holidays
     async fetchHolidays() {
       try {
         this.loading = true;
@@ -36,9 +37,18 @@ export const useHolidayStore = defineStore({
         this.loading = false;
       }
     },
+
+    async fetchHolidayById(id) {
+      try {
+        const response = await api.fetchHolidayById(id);
+        return response;
+      } catch (error) {
+        console.error("Error fetching holiday:", error);
+      }
+    },
     async createHoliday(newHoliday) {
       try {
-        const response = await api.createHoliday(newHoliday);
+        await api.createHoliday(newHoliday);
         this.fetchHolidays();
       } catch (error) {
         console.error("Error creating holiday:", error);
@@ -57,12 +67,13 @@ export const useHolidayStore = defineStore({
     async deleteHoliday(holidayId) {
       try {
         await api.deleteHoliday(holidayId);
-        this.holidays = this.holidays.filter((h) => h.id !== holidayId);
+        this.fetchHolidays();
       } catch (error) {
         console.error("Error deleting holiday:", error);
       }
     },
 
+    // locations
     async fetchLocations() {
       try {
         this.loading = true;
@@ -86,9 +97,8 @@ export const useHolidayStore = defineStore({
 
     async createLocation(newLocation) {
       try {
-        const response = await api.createHoliday(newLocation);
-        console.log(response);
-        this.fetchHolidays();
+        await api.createLocation(newLocation);
+        this.fetchLocations();
       } catch (error) {
         console.error("Error creating holiday:", error);
       }
@@ -96,7 +106,7 @@ export const useHolidayStore = defineStore({
 
     async updateLocation(updatedLocation) {
       try {
-        await api.updateLocations(updatedLocation);
+        await api.updateLocation(updatedLocation);
         this.fetchLocations();
       } catch (error) {
         console.error("Error updating holiday:", error);
@@ -105,13 +115,14 @@ export const useHolidayStore = defineStore({
 
     async deleteLocation(locationId) {
       try {
-        await api.deleteHoliday(locationId);
-        this.locations = this.locations.filter((h) => h.id !== locationId);
+        await api.deleteLocation(locationId);
+        this.fetchLocations();
       } catch (error) {
         console.error("Error deleting holiday:", error);
       }
     },
 
+    // reservations
     async fetchReservations() {
       try {
         const response = await api.fetchReservations();

@@ -17,16 +17,22 @@
                   class="card-body d-flex justify-content-between align-items-center"
                 >
                   <p class="card-text">
-                    "{{ location.street }}"  №{{ location.number }}<br>
+                    "{{ location.street }}" №{{ location.number }}<br />
                     {{ location.city }}, {{ location.country }}
                   </p>
                   <div>
+                    <button
+                      @click="showEditForm(location)"
+                      class="btn btn-primary me-2"
+                    >
+                      Edit
+                    </button>
                     <router-link
                       :to="{
                         name: 'LocationDetails',
                         query: { id: location.id },
                       }"
-                      class="btn btn-info me-2"
+                      class="btn btn-secondary me-2"
                     >
                       Details
                     </router-link>
@@ -35,12 +41,6 @@
                       class="btn btn-danger me-2"
                     >
                       Delete
-                    </button>
-                    <button
-                      @click="showEditForm(location)"
-                      class="btn btn-primary"
-                    >
-                      Edit
                     </button>
                   </div>
                 </div>
@@ -161,7 +161,7 @@
                   required
                 />
               </div>
-              <button type="submit" class="btn btn-success mt-3">
+              <button type="submit" class="btn btn-primary mt-3">
                 Create Location
               </button>
             </form>
@@ -173,7 +173,6 @@
 </template>
 
 <script setup>
-import apiService from "@/services/apiService";
 import { ref, onMounted } from "vue";
 import { useHolidayStore } from "@/store/holidayStore";
 
@@ -217,7 +216,7 @@ const updateLocation = async (location) => {
       country: editFormData.value.country,
     };
 
-    await apiService.updateLocation(updateDTO);
+    await holidayStore.updateLocation(updateDTO);
     holidayStore.fetchData();
     showEdit.value = false;
     editedLocation.value = null;
@@ -227,7 +226,7 @@ const updateLocation = async (location) => {
 };
 const createLocation = async () => {
   try {
-    await apiService.createLocation(formData.value);
+    await holidayStore.createLocation(formData.value);
     holidayStore.fetchData();
   } catch (error) {
     console.error("Error creating location:", error);
@@ -236,7 +235,7 @@ const createLocation = async () => {
 
 const deleteLocation = async (id) => {
   try {
-    await apiService.deleteLocation(id);
+    await holidayStore.deleteLocation(id);
     holidayStore.fetchData();
   } catch (error) {
     console.error("Error deleting location:", error);

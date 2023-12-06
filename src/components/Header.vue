@@ -23,7 +23,10 @@
               <router-link to="/locations" class="nav-link">Locations</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/reservations" class="nav-link">Reservations</router-link>
+              <router-link to="/reservations" class="nav-link">Make a reservation</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/find-reservation" class="nav-link">Find a reservation</router-link>
             </li>
           </ul>
         </div>

@@ -13,25 +13,25 @@
                 class="card mb-3"
               >
                 <div class="card-body">
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <div>
+                  <div class="row">
+                    <div class="col-md-4">
                       <h5 class="card-title mb-2">
                         <strong>{{ holiday.title }}</strong>
                       </h5>
-                      <p class="card-text mb-1">
-                        Start Date: {{ holiday.startDate }}
+                      <p class="card-text mb-2">
+                        <strong>Start Date:</strong> {{ holiday.startDate }}
                       </p>
-                      <p class="card-text mb-1">
-                        Duration: {{ holiday.duration }}
+                      <p class="card-text mb-2">
+                        <strong>Duration:</strong> {{ holiday.duration }}
                       </p>
-                      <p class="card-text mb-1">Price: ${{ holiday.price }}</p>
-                      <p class="card-text mb-1">
-                        Free Slots: {{ holiday.freeSlots }}
+                      <p class="card-text mb-2">
+                        <strong>Price:</strong> ${{ holiday.price }}
+                      </p>
+                      <p class="card-text mb-2">
+                        <strong>Free Slots:</strong> {{ holiday.freeSlots }}
                       </p>
                     </div>
-                    <div>
+                    <div class="col-md-4">
                       <p class="card-text mb-0">
                         <span class="fw-bold">Location:</span><br />
                         {{ holiday.location.street }},
@@ -39,20 +39,34 @@
                         {{ holiday.location.city }},
                         {{ holiday.location.country }}
                       </p>
-                      <div>
-                        <button
-                          @click="deleteHoliday(holiday.id)"
-                          class="btn btn-danger me-2"
+                    </div>
+                    <!-- buttons -->
+                    <div
+                      class="col-md-4 d-flex flex-column justify-content-end align-items-end mr-3"
+                    >
+                      <button
+                        @click="showEditForm(holiday)"
+                        class="btn btn-primary mb-2"
+                      >
+                        Edit
+                      </button>
+                      <button class="btn btn-secondary mb-2">
+                        <router-link
+                          :to="{
+                            name: 'HolidayDetails',
+                            query: { id: holiday.id },
+                          }"
+                          class="text-white text-decoration-none"
                         >
-                          Delete
-                        </button>
-                        <button
-                          @click="showEditForm(holiday)"
-                          class="btn btn-primary"
-                        >
-                          Edit
-                        </button>
-                      </div>
+                          Details
+                        </router-link>
+                      </button>
+                      <button
+                        @click="deleteHoliday(holiday.id)"
+                        class="btn btn-danger mb-2"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -140,7 +154,6 @@
                         </select>
                       </div>
                     </div>
-
                     <button type="submit" class="btn btn-success mt-4">
                       Update Holiday
                     </button>
@@ -157,7 +170,6 @@
           </div>
         </div>
       </div>
-
       <!-- create location  -->
       <div class="col-md-4">
         <div class="card pe-4" style="height: 700px">
@@ -244,7 +256,6 @@
 </template>
 
 <script setup>
-import apiService from "@/services/apiService";
 import { ref, onMounted } from "vue";
 import { useHolidayStore } from "@/store/holidayStore";
 
@@ -302,8 +313,7 @@ const updateHoliday = async (holiday) => {
       location: editFormData.value.location,
     };
 
-    await apiService.updateHoliday(updateData);
-    holidayStore.fetchData();
+    await holidayStore.updateHoliday(updateData);
     showEdit.value = false;
     editedHoliday.value = null;
   } catch (error) {
@@ -313,8 +323,7 @@ const updateHoliday = async (holiday) => {
 
 const createHoliday = async () => {
   try {
-    await apiService.createHoliday(formData.value);
-    holidayStore.fetchData();
+    await holidayStore.createHoliday(formData.value);
   } catch (error) {
     console.error("Error creating holiday:", error);
   }
@@ -322,8 +331,7 @@ const createHoliday = async () => {
 
 const deleteHoliday = async (id) => {
   try {
-    await apiService.deleteHoliday(id);
-    holidayStore.fetchData();
+    await holidayStore.deleteHoliday(id);
   } catch (error) {
     console.error("Error deleting holiday:", error);
   }

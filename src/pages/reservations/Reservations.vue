@@ -2,81 +2,99 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-4">
-        <div class="mb-3">
-          <label for="locationId" class="form-label">Location ID:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="locationId"
-            v-model="locationId"
-          />
+        <div class="card pe-4" style="height: 500px; overflow-y: scroll">
+          <div class="card-body">
+            <h2 class="mb-4 mt-3">Find A Holiday</h2>
+            <div class="mb-4">
+              <label for="locationId">Location ID:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="locationId"
+                v-model="locationId"
+              />
+            </div>
+            <div class="mb-4">
+              <label for="startDate">Start Date:</label>
+              <input
+                type="date"
+                class="form-control"
+                id="startDate"
+                v-model="startDate"
+              />
+            </div>
+            <div class="mb-4">
+              <label for="duration">Duration:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="duration"
+                v-model="duration"
+              />
+            </div>
+            <button class="btn btn-primary mt-4" @click="fetchHolidaysData">
+              Find a Holiday
+            </button>
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="startDate" class="form-label">Start Date:</label>
-          <input
-            type="date"
-            class="form-control"
-            id="startDate"
-            v-model="startDate"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="duration" class="form-label">Duration:</label>
-          <input
-            type="number"
-            class="form-control"
-            id="duration"
-            v-model="duration"
-          />
-        </div>
-        <button class="btn btn-primary" @click="fetchHolidaysData">
-          Find a Holiday
-        </button>
       </div>
       <div class="col-md-8">
-        <div v-for="holiday in holidays" :key="holiday.id" class="card mb-3">
+        <div class="card pe-4" style="height: 500px; overflow-y: scroll">
           <div class="card-body">
-            <h5 class="card-title">{{ holiday.title }}</h5>
-            <p class="card-text">
-              {{ holiday.startDate }} - Duration: {{ holiday.duration }}
-            </p>
-            <div class="mb-3">
-              <button
-                class="btn btn-primary"
-                @click="openReservationForm(holiday.id)"
-              >
-                Reserve
-              </button>
-              <div v-if="reservationForm.holidayId === holiday.id" class="mt-3">
-                <h6>Reservation Details</h6>
+            <div
+              v-for="holiday in holidays"
+              :key="holiday.id"
+              class="card mb-3"
+            >
+              <div class="card-body">
+                <h5 class="card-title">{{ holiday.title }}</h5>
+                <p class="card-text">
+                  {{ holiday.startDate }} - Duration: {{ holiday.duration }}
+                </p>
                 <div class="mb-3">
-                  <label for="contactName" class="form-label"
-                    >Contact Name:</label
+                  <button
+                    class="btn btn-primary"
+                    @click="openReservationForm(holiday.id)"
                   >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="contactName"
-                    v-model="reservationForm.contactName"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="phoneNumber" class="form-label"
-                    >Phone Number:</label
+                    Reserve
+                  </button>
+                  <div
+                    v-if="reservationForm.holidayId === holiday.id"
+                    class="mt-3"
                   >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="phoneNumber"
-                    v-model="reservationForm.phoneNumber"
-                  />
+                    <h5 class="form-label mb-3">Reservation Details</h5>
+                    <div class="mb-3">
+                      <label for="contactName">Contact Name:</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="contactName"
+                        v-model="reservationForm.contactName"
+                      />
+                    </div>
+                    <div class="mb-3">
+                      <label for="phoneNumber">Phone Number:</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="phoneNumber"
+                        v-model="reservationForm.phoneNumber"
+                      />
+                    </div>
+                    <button
+                      class="btn btn-success mt-4"
+                      @click="createReservation(holiday.id)"
+                    >
+                      Confirm Reservation
+                    </button>
+                    <button
+                      @click="cancelReservation"
+                      class="btn btn-secondary mt-4 btn-cancel"
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 </div>
-                <button
-                  class="btn btn-success"
-                  @click="createReservation(holiday.id)"
-                >
-                  Confirm Reservation
-                </button>
               </div>
             </div>
           </div>
@@ -84,91 +102,10 @@
       </div>
     </div>
   </div>
-  <!-- search, edit, delete -->
-  <div class="container mt-5">
-    <h1>Find Reservation</h1>
-    <div class="mb-3">
-      <label for="searchPhoneNumber" class="form-label"
-        >Search by Phone Number:</label
-      >
-      <input
-        type="text"
-        class="form-control"
-        id="searchPhoneNumber"
-        v-model="searchPhoneNumber"
-      />
-    </div>
-    <button class="btn btn-primary" @click="findReservation">Search</button>
-
-    <div v-if="foundReservation" class="mt-4">
-      <h3>Found Reservation</h3>
-      <ul class="list-group">
-        <li class="list-group-item">
-          {{ foundReservation.contactName }} -
-          {{ foundReservation.phoneNumber }}
-
-          <p>{{ foundReservation.holiday.title }}</p>
-          <p>{{ foundReservation.holiday.startDate }}</p>
-          <p>
-            {{ foundReservation.holiday.location.city }},
-            {{ foundReservation.holiday.location.country }}
-          </p>
-
-          <div class="mt-2">
-            <button class="btn btn-primary" @click="editFoundReservation">
-              Edit
-            </button>
-            <button class="btn btn-danger" @click="deleteFoundReservation">
-              Delete
-            </button>
-          </div>
-
-          <!-- Edit form for the found reservation -->
-          <div v-if="showEditForm" class="mt-3">
-            <h6>Edit Reservation</h6>
-            <div class="mb-3">
-              <label for="editContactName" class="form-label"
-                >Contact Name:</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="editContactName"
-                v-model="editForm.contactName"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="editPhoneNumber" class="form-label"
-                >Phone Number:</label
-              >
-              <input
-                type="text"
-                class="form-control"
-                id="editPhoneNumber"
-                v-model="editForm.phoneNumber"
-              />
-            </div>
-            <button
-              class="btn btn-success mt-4"
-              @click="updateFoundReservation"
-            >
-              Update Reservation
-            </button>
-            <button
-              @click="cancelEdit"
-              class="btn btn-secondary mt-4 btn-cancel"
-            >
-              Cancel
-            </button>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useHolidayStore } from "@/store/holidayStore";
 
 const holidayStore = useHolidayStore();
@@ -212,75 +149,30 @@ const createReservation = async (holidayId) => {
   }
 };
 
-// edit logic
-
-const searchPhoneNumber = ref("");
-const foundReservation = ref(null);
-const showEditForm = ref(false);
-
-const editForm = ref({
-  id: null,
-  contactName: "",
-  phoneNumber: "",
-});
-
-const findReservation = () => {
-  const reservation = holidayStore.findReservationByPhoneNumber(
-    searchPhoneNumber.value
-  );
-
-  foundReservation.value = reservation ? reservation : null;
-};
-
-const editFoundReservation = () => {
-  editForm.value.contactName = foundReservation.value.contactName;
-  editForm.value.phoneNumber = foundReservation.value.phoneNumber;
-  showEditForm.value = true;
-};
-
-const cancelEdit = () => {
-  showEditForm.value = false;
-};
-
-const updateFoundReservation = async () => {
-  try {
-    const updatedReservation = {
-      id: foundReservation.value.id,
-      contactName: editForm.value.contactName,
-      phoneNumber: editForm.value.phoneNumber,
-      holiday: foundReservation.value.holiday.id,
-    };
-
-    await holidayStore.updateReservation(updatedReservation);
-    showEditForm.value = false;
-
-    const updated = await holidayStore.fetchReservationById(
-      foundReservation.value.id
-    );
-    if (updated) {
-      foundReservation.value = updated;
-    }
-  } catch (error) {
-    console.error("Error updating reservation:", error);
-  }
-};
-
-const deleteFoundReservation = async () => {
-  try {
-    await holidayStore.deleteReservation(foundReservation.value.id);
-    foundReservation.value = null;
-  } catch (error) {
-    console.error("Error deleting reservation:", error);
-  }
+const cancelReservation = () => {
+  reservationForm.value = {
+    holidayId: null,
+    contactName: "",
+    phoneNumber: "",
+  };
 };
 
 const fetchHolidaysData = async () => {
   try {
-    holidays.value = await holidayStore.fetchHolidaysForReservation(
-      locationId.value,
-      startDate.value,
-      duration.value
-    );
+    if (
+      locationId.value === null &&
+      startDate.value === null &&
+      duration.value === null
+    ) {
+      await holidayStore.fetchData();
+      holidays.value = holidayStore.holidays;
+    } else {
+      holidays.value = await holidayStore.fetchHolidaysForReservation(
+        locationId.value,
+        startDate.value,
+        duration.value
+      );
+    }
   } catch (error) {
     console.error("Error fetching holidays:", error);
   }
@@ -288,6 +180,7 @@ const fetchHolidaysData = async () => {
 
 onMounted(() => {
   holidayStore.fetchData();
+  fetchHolidaysData();
 });
 </script>
 

@@ -7,6 +7,7 @@ const instance = axios.create({
 });
 
 const api = {
+  // holidays
   async fetchHolidays() {
     try {
       const response = await instance.get("/holidays");
@@ -80,6 +81,7 @@ const api = {
     }
   },
 
+  // locations
   async fetchLocations() {
     try {
       const response = await instance.get("/locations");
@@ -92,7 +94,7 @@ const api = {
 
   async fetchLocationById(id) {
     try {
-     const response = await instance.get(`/locations/${id}`);
+      const response = await instance.get(`/locations/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching location:", error);
@@ -109,10 +111,9 @@ const api = {
     }
   },
 
-  async updateLocation(updateDTO) {
+  async updateLocation(location) {
     try {
-      console.log(updateDTO);
-      await instance.put(`/locations`, updateDTO);
+      await instance.put(`/locations`, location);
     } catch (error) {
       console.error("Error updating location:", error);
       throw error;
@@ -128,6 +129,7 @@ const api = {
     }
   },
 
+  // reservations
   async fetchReservations() {
     try {
       const response = await instance.get("/reservations");
@@ -150,8 +152,7 @@ const api = {
 
   async createReservation(reservation) {
     try {
-      const response = await instance.post("/reservations", reservation);
-      return response.data;
+      await instance.post("/reservations", reservation);
     } catch (error) {
       console.error("Error creating reservation:", error);
       throw error;
