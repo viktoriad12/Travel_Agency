@@ -23,11 +23,11 @@ export const useHolidayStore = defineStore({
         this.loading = false;
       }
     },
-    async fetchHolidaysForReservation(locationId, startDate, duration) {
+    async fetchHolidaysForReservation(location, startDate, duration) {
       try {
         this.loading = true;
         const response = await api.fetchHolidaysForReservation(
-          locationId,
+          location,
           startDate,
           duration
         );

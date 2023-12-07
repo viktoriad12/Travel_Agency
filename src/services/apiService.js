@@ -18,12 +18,12 @@ const api = {
     }
   },
 
-  async fetchHolidaysForReservation(locationId, startDate, duration) {
+  async fetchHolidaysForReservation(location, startDate, duration) {
     try {
       const params = {};
 
-      if (locationId) {
-        params.locationId = locationId;
+      if (location) {
+        params.location = location;
       }
       if (startDate) {
         params.startDate = startDate;

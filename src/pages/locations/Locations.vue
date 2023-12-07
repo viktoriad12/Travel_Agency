@@ -59,7 +59,7 @@
         <div class="card pe-4" style="height: 550px">
           <div class="card-body">
             <h1>Create A New Location</h1>
-            <form @submit="createLocation" class="mt-4">
+            <form @submit.prevent="createLocation" class="mt-4">
               <div class="form-group">
                 <label for="street" class="form-label">Street</label>
                 <input

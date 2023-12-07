@@ -6,19 +6,13 @@
           <div class="card-body">
             <h2 class="mb-4 mt-3">Find A Holiday</h2>
             <div class="mb-4">
-              <label for="location">Location</label>
-              <select v-model="locationId" class="form-select" id="location">
-                <option value="" disabled>Select a location</option>
-                <option
-                  v-for="location in holidayStore.locations"
-                  :key="location.id"
-                  :value="location.id"
-                >
-                  {{ location.street }} {{ location.number }},
-                  {{ location.city }},
-                  {{ location.country }}
-                </option>
-              </select>
+              <label for="location">Search by City or Country</label>
+              <input
+                type="text"
+                class="form-control"
+                id="location"
+                v-model="location"
+              />
             </div>
             <div class="mb-4">
               <label for="startDate">Start Date:</label>
@@ -124,7 +118,7 @@ import { useHolidayStore } from "@/store/holidayStore";
 
 const holidayStore = useHolidayStore();
 
-const locationId = ref(null);
+const location = ref(null);
 const startDate = ref(null);
 const duration = ref(null);
 const holidays = ref([]);
@@ -175,14 +169,14 @@ const fetchHolidaysData = async () => {
   try {
     await holidayStore.fetchData();
     if (
-      locationId.value === null &&
+      location.value === null &&
       startDate.value === null &&
       duration.value === null
     ) {
       holidays.value = holidayStore.holidays;
     } else {
       holidays.value = await holidayStore.fetchHolidaysForReservation(
-        locationId.value,
+        location.value,
         startDate.value,
         duration.value
       );

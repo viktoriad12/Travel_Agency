@@ -84,7 +84,7 @@
         <div class="card pe-4" style="height: 700px">
           <div class="card-body">
             <h1>Create A New Holiday</h1>
-            <form @submit="createHoliday">
+            <form @submit.prevent="createHoliday">
               <div class="mb-3">
                 <label for="location" class="form-label">Location</label>
                 <select
@@ -189,7 +189,7 @@ const showEditForm = (holiday) => {
 
 const createHoliday = async () => {
   try {
-    formData.value.price = Number(formData.value.price);
+    console.log(formData.value);
     await holidayStore.createHoliday(formData.value);
   } catch (error) {
     console.error("Error creating holiday:", error);
@@ -198,7 +198,9 @@ const createHoliday = async () => {
 
 const deleteHoliday = async (id) => {
   try {
-    const confirmed = window.confirm("Are you sure you want to delete this holiday?");
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this holiday?"
+    );
     if (confirmed) {
       await holidayStore.deleteHoliday(id);
     } else {
